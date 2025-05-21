@@ -20,10 +20,10 @@ public class Board  {
                 currentRow.add("");
             }
 
-            grid.add(currentRow);
+            // grid.add(currentRow);
         }
     }
 
     //make chess notation (like: a1, f4, g6, etc.) the chess pieces will use this to know which grid to go into.
-
+}
     
