@@ -23,6 +23,7 @@ public class GridTile{
   private int outlineColor;
   final int defaultOutlineColor =0x000000; //BLACK #000000
   private String mark;
+  
   final private static String noMark = " ";
   private boolean isCaptured;
 
