@@ -10,11 +10,11 @@ public class Knight extends Piece {
         int deltaX = Math.abs(newX - getPosX());
         int deltaY = Math.abs(newY - getPosY());
 
-        // Knight moves in an "L" shape: two squares in one direction and one square perpendicular
+        // Knight moves in an "L" shape: two squares in one direction and one square to the left or right
         return (deltaX == 2 && deltaY == 1) || (deltaX == 1 && deltaY == 2);
     }
 
-    // Override moveTo method to include knight-specific logic if needed
+    // Override moveTo method to include knight-specific movement
     @Override
     public void moveTo(int newX, int newY) {
         if (canMoveTo(newX, newY)) {

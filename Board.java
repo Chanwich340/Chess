@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Board  {
+public class Board extends Grid{
     // 8x8 grid to hold Piece objects (use null for empty squares)
     private ArrayList<ArrayList<Piece>> grid;
 
