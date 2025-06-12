@@ -6,7 +6,7 @@ public class Main {
     PApplet.main("Game", args);
 
     //Initialize new chess board and add pieces in correct positions
-    Board chessBoard = new Board();
+    //Board chessBoard = new Board();
 
   }
 }

@@ -1,27 +1,52 @@
-public class Bishop extends Piece {
+public class Bishop implements Piece {
+    private final Side side;
+    public final boolean hasMoved;
 
-    // Constructor
-    public Bishop(int posX, int posY, boolean isWhite) {
-        super(posX, posY, isWhite, "Bishop");
+    public Bishop(Side side) {
+        this.side = side;
+        this.hasMoved = true;
     }
 
-    // Method to check if the bishop can move to a specific position
-    public boolean canMoveTo(int newX, int newY) {
-        int deltaX = Math.abs(newX - getPosX());
-        int deltaY = Math.abs(newY - getPosY());
-
-        // Bishop can move any number of squares diagonally
-        return (deltaX == deltaY);
+    public Bishop(Side side, Boolean hasMoved) {
+        this.side = side;
+        this.hasMoved = hasMoved;
     }
 
-    // Override moveTo method to include bishop-specific logic if needed
     @Override
-    public void moveTo(int newX, int newY) {
-        if (canMoveTo(newX, newY)) {
-            super.moveTo(newX, newY);
-        } else {
-            throw new IllegalArgumentException("Invalid move for Bishop");
+    public boolean isValid(Board.Move move, Board board) {
+        if (move instanceof Board.Promotion) {
+            return false;
         }
+
+        if (board.getPiece(move.endX, move.endY).getSide() == side) {
+            return false;
+        }
+
+        if (Math.abs(move.endX - move.startX) != Math.abs(move.endY - move.startY)) {
+            return false;
+        }
+
+        for (int i = move.startX + (int) Math.signum(move.endX - move.startX), j = move.startY + (int) Math.signum(move.endY - move.startY); i != move.endX && j != move.endY; i += Math.signum(move.endX - move.startX), j += Math.signum(move.endY - move.startY)) {
+            if (!(board.getPiece(i, j) instanceof None)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
+    @Override
+    public String toString() {
+        return "B" + side;
+    }
+
+    @Override
+    public Side getSide() {
+        return side;
+    }
+
+    @Override
+    public boolean hasMoved() {
+        return hasMoved;
+    }
 }

@@ -1,31 +1,67 @@
-public class Pawn extends Piece {
+public class Pawn implements Piece {
+    private final Side side;
+    public final boolean hasMoved;
 
-    // Constructor
-    public Pawn(int posX, int posY, boolean isWhite) {
-        super(posX, posY, isWhite, "Pawn");
+    public Pawn(Side side) {
+        this.side = side;
+        this.hasMoved = true;
     }
 
-    // Method to check if the pawn can move to a specific position
-    public boolean canMoveTo(int newX, int newY) {
-        int deltaX = Math.abs(newX - getPosX());
-        int deltaY = Math.abs(newY - getPosY());
-
-        // Pawn can move forward one square (or two squares from its starting position)
-        if (isWhite()) {
-            return (deltaX == 0 && (deltaY == 1 || (getPosY() == 1 && deltaY == 2)));
-        } else {
-            return (deltaX == 0 && (deltaY == -1 || (getPosY() == 6 && deltaY == -2)));
-        }
+    public Pawn(Side side, Boolean hasMoved) {
+        this.side = side;
+        this.hasMoved = hasMoved;
     }
 
-    // Override moveTo method to include pawn-specific logic if needed
     @Override
-    public void moveTo(int newX, int newY) {
-        if (canMoveTo(newX, newY)) {
-            super.moveTo(newX, newY);
-        } else {
-            throw new IllegalArgumentException("Invalid move for Pawn");
-        }
-    }   
+    public boolean isValid(Board.Move move, Board board) {
+        if (move instanceof Board.Promotion && move.getEndPiece(board) != null) {
+            if (!(board.getPiece(move.startX, move.startY) instanceof Pawn && move.startY == 1) && side == Side.WHITE || !(board.getPiece(move.startX, move.startY) instanceof Pawn && move.startY== 6) && side == Side.BLACK) {
+                return false;
+            }
 
+            return isValid(new Board.Promotion(move.startX, move.startY, move.endX, move.endY, null), board);
+        } else if (!(move instanceof Board.Promotion)) {
+            if (move.startY == 1 && side == Side.WHITE || move.startY== 6 && side == Side.BLACK) {
+                return false;
+            }
+        }
+
+        if (board.getPiece(move.endX, move.endY).getSide() == side) {
+            return false;
+        }
+        
+        //two space moves
+        if (move.endY - move.startY != 1 && side == Side.BLACK) {
+            if (!(move.endY - move.startY == 2 && move.startY == 1 && board.getPiece(move.startX, 2) instanceof None)) {
+                return false;
+            }
+        } else if (move.endY - move.startY != -1 && side == Side.WHITE) {
+            if (!(move.endY - move.startY == -2 && move.startY == 6 && board.getPiece(move.startX, 5) instanceof None)) {
+            return false;
+            }
+        }
+
+        if (move.endX - move.startX == 0 && board.getPiece(move.endX, move.endY) instanceof None) {
+            return true;
+        } else if (Math.abs(move.endX - move.startX) == 1 && Math.abs(move.endY - move.startY) == 1 && (!(board.getPiece(move.endX, move.endY) instanceof None) || board.getPiece(move.endX, move.endY) instanceof GhostPawn)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "P" + side;
+    }
+
+    @Override
+    public Side getSide() {
+        return side;
+    }
+
+    @Override
+    public boolean hasMoved() {
+        return hasMoved;
+    }
 }

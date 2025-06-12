@@ -1,27 +1,42 @@
-public class King extends Piece {
-    
-    // Constructor
-    public King(int posX, int posY, boolean isWhite) {
-        super(posX, posY, isWhite, "King");
+public class King implements Piece {
+    private final Side side;
+    public final boolean hasMoved;
+
+    public King(Side side) {
+        this.side = side;
+        this.hasMoved = true;
     }
-    
-    // Method to check if the king can move to a specific position
-    public boolean canMoveTo(int newX, int newY) {
-        int deltaX = Math.abs(newX - getPosX());
-        int deltaY = Math.abs(newY - getPosY());
-        
-        // King can move one square in any direction
-        return (deltaX <= 1 && deltaY <= 1);
+
+    public King(Side side, Boolean hasMoved) {
+        this.side = side;
+        this.hasMoved = hasMoved;
     }
-    
-    // Override moveTo method to include king-specific logic if needed
+
     @Override
-    public void moveTo(int newX, int newY) {
-        if (canMoveTo(newX, newY)) {
-            super.moveTo(newX, newY);
-        } else {
-            throw new IllegalArgumentException("Invalid move for King");
+    public boolean isValid(Board.Move move, Board board) {
+        if (move instanceof Board.Promotion) {
+            return false;
         }
+
+        if (board.getPiece(move.endX, move.endY).getSide() == side) {
+            return false;
+        }
+
+        return Math.abs(move.endX - move.startX) <= 1 && (Math.abs(move.endY - move.startY) <= 1);
     }
-    
+
+    @Override
+    public String toString() {
+        return "K" + side;
+    }
+
+    @Override
+    public Side getSide() {
+        return side;
+    }
+
+    @Override
+    public boolean hasMoved() {
+        return hasMoved;
+    }
 }
