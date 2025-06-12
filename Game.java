@@ -96,7 +96,8 @@ public class Game extends PApplet{
     splashScreen = new Screen(p, "splash", splashBg);
     chessGrid = new Grid(p, "chessBoard", chessGridBg, 6, 8);
     endScreen = new World(p, "end", endBg);
-    currentScreen = splashScreen;
+    // currentScreen = splashScreen;
+    currentScreen = chessGrid; //start with chessGrid
 
     //SETUP: Construct Game objects used in All Screens
     runningHorse = new AnimatedSprite(p, "sprites/horse_run.png", "sprites/horse_run.json", 50.0f, 75.0f, 1.0f);
@@ -290,7 +291,7 @@ public class Game extends PApplet{
     if(currentScreen == chessGrid){
 
       // Print a '1' in console when level1
-      System.out.print("1");
+      // System.out.print("1");
 
       // ETANGENT: update Game logic
       Player otherPlayer = currPlayer == player1 ? player2 : player1;
@@ -300,6 +301,7 @@ public class Game extends PApplet{
 
       if(board.legalMoves(otherPlayer.getSide()).size() == 0 && board.isCheck(otherPlayer.getSide())) {
           System.out.println(currPlayer + " is the GOAT!");
+          
           //break;
       } else if(board.isCheck(otherPlayer.getSide())) {
           System.out.println("AAAAAAAAAAAAAAAAAAAAA CHEEEEEEEEEEECK!!!!!!!");
