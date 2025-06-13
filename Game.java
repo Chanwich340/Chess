@@ -1,13 +1,15 @@
-/* Game Class Starter File
- * Authors: Joel A. Bianchi
- * Last Edit: 5/26/25
- * Added example for using grid method setAllMarks()
+/**
+ * Game Class - Primary game logic for a Java-based Processing Game
+ * @author Joel A Bianchi
+ * @version 6/12/25
+ * No need to create PImage for bg
  */
 
 //import processing.sound.*;
-
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PImage;
+
 
 public class Game extends PApplet{
 
@@ -27,13 +29,11 @@ public class Game extends PApplet{
 
   // VARIABLES: splashScreen
   Screen splashScreen;
-  PImage splashBg;
   String splashBgFile = "images/apcsa.png";
   //SoundFile song;
 
   // VARIABLES: chessGrid Screen (pieces on a grid pattern)
   Grid chessGrid;
-  PImage chessGridBg;
   String chessGridBgFile = "images/chessbb.jpg";
   PImage piece1;   // Use PImage to display the image in a GridLocation
   String piece1File = "images/x_wood.png";
@@ -50,7 +50,6 @@ public class Game extends PApplet{
 
   // VARIABLES: endScreen
   World endScreen;
-  PImage endBg;
   String endBgFile = "images/youwin.png";
 
 
@@ -76,26 +75,14 @@ public class Game extends PApplet{
   //Required Processing method that gets run once
   public void setup() {
 
-    p.imageMode(p.CORNER);    //Set Images to read coordinates at corners
-    //fullScreen();   //only use if not using a specfic bg image
-    
     //SETUP: Set the title on the title bar
     surface.setTitle(titleText);
-
-    //SETUP: Load BG images used in all screens
-    splashBg = p.loadImage(splashBgFile);
-    chessGridBg = p.loadImage(chessGridBgFile);
-    endBg = p.loadImage(endBgFile);
-
-    //SETUP: If non-moving, Resize all BG images to exactly match the screen size
-    splashBg.resize(p.width, p.height);
-    chessGridBg.resize(p.width, p.height);
-    endBg.resize(p.width, p.height);   
+    p.imageMode(PConstants.CORNER);    //Set Images to read coordinates at corners
 
     //SETUP: Construct each Screen, World, Grid
-    splashScreen = new Screen(p, "splash", splashBg);
-    chessGrid = new Grid(p, "chessBoard", chessGridBg, 6, 8);
-    endScreen = new World(p, "end", endBg);
+    splashScreen = new Screen(p, "splash", splashBgFile);
+    chessGrid = new Grid(p, "chessBoard", chessGridBgFile, 8, 8);
+    endScreen = new World(p, "end", endBgFile);
     // currentScreen = splashScreen;
     currentScreen = chessGrid; //start with chessGrid
 
@@ -429,4 +416,4 @@ public class Game extends PApplet{
   }
 
 
-} //close class
+} // end of Game class
