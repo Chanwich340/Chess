@@ -40,7 +40,15 @@ public class Human implements Player {
         return moveOf(answer);
     }
 
-    public static boolean isValid(String answer) {
+    public static boolean isValid(String chessAnswer) {
+
+
+
+        
+
+
+        String answer = chessAnswer;
+
         if(answer.length() == 5) {
             return isValid(answer.substring(0,4)) && "QRBN".indexOf(answer.substring(4)) != -1;
         }
@@ -87,3 +95,4 @@ public class Human implements Player {
         return character - 'a';
     }
 }
+// matthewsanceheeess
