@@ -21,78 +21,85 @@ public class Human implements Player {
     @Override
     public Board.Move getInput(Board board) {
         System.out.println(side + ": Make your move");
-        String answer = scanner.nextLine();
+        board.print();
 
         while (true) {
+            String answer = scanner.nextLine().trim().toLowerCase(); //moved this inside the loop to fix the bug where the first input was not checked
+
             if (isValid(answer)) {
-                if (board.isValid(moveOf(answer), side)) {
-                    break;
+                Board.Move move = moveOf(answer); // Convert the string to a move object
+                if (board.isValid(move, side)) {// check if the move is legal
+                    return move;
                 } else {
                     System.out.println("Illegal Move!");
                 }
             } else {
-                System.out.println("Incorrect notation!");
-            }
-            board.print();   
-            answer = scanner.nextLine();           
+                System.out.println("Incorrect notation! Try using the format: a2a3, a7a8Q, etc."); //updated to help the user with notation if they don't know it
+            }         
         }
-        
-        return moveOf(answer);
     }
 
-    public static boolean isValid(String chessAnswer) {
+    public static boolean isValid(String move) {
 
+        //for normal moves
+        if (move.length() == 4) {
+            return isValidSquare(move.substring(0,2)) && isValidSquare(move.substring(2,4)) && !move.substring(0,2).equals(move.substring(2,4));
+        }
 
-
+        // for promotion moves (special move)
+        if (move.length() == 5) {
+            return isValidSquare(move.substring(0,2)) && isValidSquare(move.substring(2,4)) && "QRBN".indexOf(move.charAt(4)) != -1 && !move.substring(0,2).equals(move.substring(2,4));
+        }
         
+        return false; //if the move is not 4 or 5 characters long, it is invalid
+    }
 
-
-        String answer = chessAnswer;
-
-        if(answer.length() == 5) {
-            return isValid(answer.substring(0,4)) && "QRBN".indexOf(answer.substring(4)) != -1;
-        }
-
-        if (answer.length() != 4) {
+    public static boolean isValidSquare(String square) {
+        // Check if the square is exactly 2 characters long and contains valid characters such as 'a'-'h' for columns and '1'-'8' for rows
+        if (square.length() == 2 && square.charAt(0) >= 'a' && square.charAt(0) <= 'h' && square.charAt(1) >= '1' && square.charAt(1) <= '8') {
+            return true; // square must be exactly 2 characters long
+        } else {
             return false;
         }
-        if (answer.charAt(0) == answer.charAt(2) && answer.charAt(1) == answer.charAt(3)) {
-            return false;
-        }
-
-        return answer.length() == 4 && "abcdefgh".indexOf(answer.charAt(0)) != -1 && "abcdefgh".indexOf(answer.charAt(2)) != -1 && "12345678".indexOf(answer.charAt(1)) != -1 && "12345678".indexOf(answer.charAt(3)) != -1;
     }
 
     //assumes str follows format of a String where [char, int, char, int] (isValid was called)
-    public static Board.Move moveOf(String str) {
-        if (str.length() == 5) {
-            Board.Move subMove = moveOf(str.substring(0, 4));
+    public static Board.Move moveOf(String moveStr) {
+
+        //take start and end positions
+        String start = moveStr.substring(0, 2);
+        String end = moveStr.substring(2, 4);
+
+        //convert to coords
+        int startX = start.charAt(0) - 'a';
+        int startY = 8 - start.charAt(1);
+        int endX = end.charAt(0) - 'a';
+        int endY = 8 - end.charAt(1);
+
+
+        if (moveStr.length() == 5) {
+            
+            char promoChar = moveStr.charAt(4); // the promotion piece character
             PieceSupplier promotionPiece;
-            switch(str.substring(4)) {
-                case "Q":
+            switch(Character.toUpperCase(promoChar)) {
+                case 'Q':
                     promotionPiece = (side) -> new Queen(side);
                     break;
-                case "R":
+                case 'R':
                     promotionPiece = (side) -> new Rook(side);
                     break;
-                case "B":
+                case 'B':
                     promotionPiece = (side) -> new Bishop(side);
                     break;
-                case "N":
+                case 'N':
                     promotionPiece = (side) -> new Knight(side);
                     break;
                 default:
                     throw new RuntimeException("is valid no worky");
             }
             
-            return new Board.Promotion(subMove.startX, subMove.startY, subMove.endX, subMove.endY, promotionPiece);
+            return new Board.Promotion(startX, startY, endX, endY, promotionPiece); //removed promotionPiece from the constructor bc changed it
         }
-
-        return new Board.Move(letterToNumber(str.charAt(0)), 8 - Character.getNumericValue(str.charAt(1)), letterToNumber(str.charAt(2)), 8 - Character.getNumericValue(str.charAt(3)));
-    }
-
-    public static int letterToNumber(char character) {
-        return character - 'a';
+        return new Board.Move(startX, startY, endX, endY); //normal move
     }
 }
-// matthewsanceheeess
