@@ -106,6 +106,10 @@ public class Board {
         this.board = board;
     }
 
+    public Piece[][] getPieces(){
+        return board;
+    }
+
     public static Piece[] pawnRow(Side side) {
         Piece[] row = new Piece[8];
 

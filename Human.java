@@ -20,7 +20,7 @@ public class Human implements Player {
 
     @Override
     public Board.Move getInput(Board board) {
-        
+
         System.out.println(side + ": Make your move using Chess Notation");
 
         // Get chess notation from the user
@@ -30,20 +30,63 @@ public class Human implements Player {
         String first2chars = "a2";
         String last2chars = "a3";
 
-        // CASE 1: PAWN MOVE (Only 2 characters)
+        // Variable to evaluate the current Pieces on the board
+        //--> get the board object from the Board class, board.getPieces() returns a 2D array of Piece objects
+        Piece[][] pieces = board.getPieces();
+
+        // CASE 1: PAWN MOVE
+
+        // 1a. Check if there are only 2 characters
+
+
+            // 1b. If so, record the last 2 characters as last2chars
+
+            // 1c. Find all the Pawns on the Board 
+            //--> loop through the 2Darray to find the desired Piece object, if you call a Piece object's toString() method, the first character should be what you're looking for
+            for(int r=0; r < 8; r++){
+                for(int c=0; c<8; c++){
+                    Piece p = pieces[r][c];
+
+                    // 1d. When you find the desired Piece (P), check if going from their current position to the end position is a Valid Move
+                    // --> use isValid() method in this class
+
+                    
+                        // 1e. If you find a validMove, store the startingPosition as first2chars 
+                
+
+                }
+            }
+
+
+        // CASE 2: FACE PIECE MOVES (Example: Nf3, Knight moves to f3)
+
+        // 2a. Record the piece moving (example N) 
+        // --> use substring on 1st character
+
+
+        // 2b. Record the endLocation of the piece 
+        // --> use substring on last 2 characters & save to last2chars variable
 
 
 
-        // CASE 2: CAPTURE (Is there an x in the middle?)
+        // 2c. Find all the Knight Pieces on the Board (g1 and b1) 
+        //--> loop through the 2Darray to find the desired Piece object, if you call a Piece object's toString() method, the first character should be what you're looking for
+        
+
+        // 2d. When you find the desired Piece (N), check if going from their current position to the end position is a Valid Move
+        // --> use isValid() method in this class
 
 
 
-        // CASE 3: 
+        // 2e. If you find a validMove, store the startingPosition as first2chars 
+
+
+        // CASE 3: CAPTURES (Is there an x in the middle?)
 
 
 
 
-
+        // Setup the ETangent notation to be used
         String answer = first2chars + last2chars;
 
         while (true) {
