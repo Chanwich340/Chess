@@ -49,13 +49,17 @@ public class Human implements Player {
                     Piece p = pieces[r][c];
                     if (p != null && p.toString().charAt(0) == 'P' && p.getSide() == side) {
 
+                        System.out.println("Found the correct Piece type, checking... " + r + "," + c + side);
+
                         // 1d. When you find the desired Piece (P), check if going from their current position to the end position is a Valid Move
                         // --> use isValid() method in this class
                         String startPosition = "" + (char)('a' + c) + (8 - r);
                         String endPosition = last2chars;
+                        String eMove = startPosition + endPosition;
 
                         // 1e. If you find a validMove, store the startingPosition as first2chars 
-                        if (isValid(startPosition + endPosition)) {
+                        if (board.isValid(moveOf(eMove), side)) {   //<--- use the isValid() method in the Board class, not Human class
+                            System.out.println("Found a valid move! " + eMove);
                             first2chars = startPosition;
                             break;
                         }
@@ -64,16 +68,25 @@ public class Human implements Player {
             }
         }       
 
-        // CASE 2: FACE PIECE MOVES (Example: Nf3, Knight moves to f3)
-        else {
+        // CASE 2: FACE PIECE TO SQUARE MOVES (Example: Nf3, Knight moves to f3 OR Nxf3, Knight takes pawn at f3)
+        else if(chessAnswer.length() == 3 
+            || (chessAnswer.length() ==4 && chessAnswer.substring(1,2).equals("x"))){
+
+            // Remove the 'x' if a capture
+            if (chessAnswer.contains("x"))  {
+                chessAnswer = chessAnswer.replace("x", "");
+                System.out.println("Face captures pawn");
+            }
 
             // 2a. Record the piece moving (example N) 
             // --> use substring on 1st character
             String pieceMoving = chessAnswer.substring(0, 1);
+            System.out.println("CASE 2: moving Piece: " + pieceMoving);
 
             // 2b. Record the endLocation of the piece 
             // --> use substring on last 2 characters & save to last2chars variable
             last2chars = chessAnswer.substring(chessAnswer.length() - 2);
+            System.out.println("C2: last2: " + last2chars);
 
             // 2c. Find all the Knight Pieces on the Board (g1 and b1) 
             //--> loop through the 2Darray to find the desired Piece object, if you call a Piece object's toString() method, the first character should be what you're looking for
@@ -82,13 +95,16 @@ public class Human implements Player {
                     Piece p = pieces[r][c];
                     if (p != null && p.toString().charAt(0) == pieceMoving.charAt(0) && p.getSide() == side) {
 
+                        System.out.println("Found the correct Piece type, checking... " + r + "," + c + side);
+
                         // 2d. When you find the desired Piece (N), check if going from their current position to the end position is a Valid Move
                         // --> use isValid() method in this class
                         String startPosition = "" + (char)('a' + c) + (8 - r);
                         String endPosition = last2chars;
+                        String eMove = startPosition + endPosition;
 
                         // 2e. If you find a validMove, store the startingPosition as first2chars 
-                        if (isValid(startPosition + endPosition)) {
+                        if (board.isValid(moveOf(eMove), side)) {   //<--- use the isValid() method in the Board class, not Human class
                             first2chars = startPosition;
                             break;
                         }
@@ -98,15 +114,38 @@ public class Human implements Player {
         }
 
 
-        // CASE 3: CAPTURES (Is there an x in the middle?)
-        if (chessAnswer.contains("x"))  {
-            chessAnswer = chessAnswer.replace("x", "");
+        // CASE 3: CAPTURES (FACE TO FACE or PAWN TO PAWN)
+        else if (chessAnswer.contains("x"))  {
+
+            // 3a. Check if it's pawn to pawn
+
+                chessAnswer = chessAnswer.replace("x", "");
+
+                //3b. Set first2chars and last2chars easily
+
+            // 3c. If not, then it's a Face to Face
+
+
+                // 3d. Get the first piece letter
+
+                // 3e. Get the captured piece letter
+
+                // 3f. Loop through board to find all first pieces
+
+                    // 3g. Loop through board to find all second pieces
+
+                        // 3h. Check if move is valid
+
+                            // 3i. if so, set first2chars and last2chars
+
+
         }
 
 
 
         // Setup the ETangent notation to be used
         String answer = first2chars + last2chars;
+        System.out.println("Using move.... " + answer);
 
         while (true) {
             if (isValid(answer)) {
